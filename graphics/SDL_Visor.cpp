@@ -270,7 +270,7 @@ namespace vsr
             return;
         }
         tmp_texture = SDL_CreateTextureFromSurface(renderer,tmp_surface);
-        SDL_FreeSurface(tmp_surface);
+        //SDL_FreeSurface(tmp_surface);
         tmp_surface = nullptr;
         if (!tmp_texture){
             std::cerr << "Error: Can't create texture for: " << text << " -> " << SDL_GetError() <<  std::endl;
@@ -278,7 +278,7 @@ namespace vsr
         }
         int l_width,l_heigth,err;
         err = SDL_QueryTexture(tmp_texture,nullptr,nullptr,&l_width,&l_heigth);
-        if (!err){
+        if (err < 0){
             std::cerr << "Error: Can't get dimensions for: " << text << " -> " << SDL_GetError() <<  std::endl;
             SDL_DestroyTexture(tmp_texture);
             return;
@@ -286,7 +286,7 @@ namespace vsr
         
         SDL_Rect text_area = SDL_Rect{x,y,l_width,l_heigth};
         err = SDL_RenderCopy(renderer,tmp_texture,nullptr,&text_area);
-        if (!err){
+        if (err < 0){
             std::cerr << "Error: Can't copy to renderer: " << text << " -> " << SDL_GetError() <<  std::endl;
             SDL_DestroyTexture(tmp_texture);
             return;
@@ -340,7 +340,7 @@ namespace vsr
 
     // Free tmp_surface
     if (tmp_surface != nullptr) {
-        SDL_FreeSurface(tmp_surface);
+        //SDL_FreeSurface(tmp_surface);
         tmp_surface = nullptr;
     }
 
