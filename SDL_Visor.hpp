@@ -53,12 +53,13 @@ namespace vsr
     class Icon
     {
     private:
-        uint16_t resolution;
-        Vector<Vector<Shared_ptr<Color>>> pxl_grid;
+        SDL_Texture* texture;
+        SDL_Renderer* renderer;
         
     public:
-        Icon(const String &icon_path);
-        Vector<Vector<Shared_ptr<Color>>> Get_pxl_grid();
+        Icon(String icon_path,SDL_Renderer* renderer);
+        
+        SDL_Texture* Get_texture();
         ~Icon();
     };
 
@@ -69,6 +70,7 @@ namespace vsr
     {
     private:
     //-----------------------------------------:SUB CLASS BUTTON:--------------------------
+    
     class Button
     {
     private:
@@ -90,9 +92,10 @@ namespace vsr
         SDL_Window* window;
         SDL_Renderer* renderer;
         SDL_Surface* tmp_surface;
-        SDL_Texture* tmp_texture,*button_texture;
+        SDL_Texture *tmp_texture,*button_texture;
         bool close;
-        bool ttf_initialized;
+        static bool ttf_initialized;
+        static bool img_initialized;
         String default_font;
         std::map<String,TTF_Font*> font;
         std::map<String,SDL_Texture*> texture;
@@ -114,13 +117,18 @@ namespace vsr
         void End_texture();
         void Init_TTF (String font_name,String font_path,uint32_t font_size);
         void Load_font(String font_name,String font_path,uint32_t font_size);
+        void Init_IMG(int flags);
+        void Init_IMG();
         void Set_default_font(String font_name);
+        static bool IMG_initialized();
 
 
     //Task handle
         void Present_renderer();
         bool Handle_events();
-        void Draw_texture(String texture_name);
+        void Draw_texture(SDL_Texture* texture,SDL_Rect* area);
+        void Draw_saved_texture(String texture_name);
+        void Draw_saved_texture(String texture_name,SDL_Rect* area);
         void Clean_screen();
         void Clean_screen(Color &color);
         void Show_text(
@@ -173,7 +181,7 @@ namespace vsr
         */
     //Get
         void Get_window_sizes(int* width, int* height);
-
+        SDL_Renderer* Get_renderer() ;
 
     //Destroy
 

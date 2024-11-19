@@ -38,10 +38,28 @@ namespace vsr
         }
         return results;
     }
-    Vector<Vector<Shared_ptr<Color>>> Icon::Get_pxl_grid()
-    {
-        return pxl_grid;
+    Icon::Icon(String icon_path,SDL_Renderer* renderer){
+        
+        texture = IMG_LoadTexture(renderer,icon_path.c_str());
+        if (!texture)
+        {
+            std::cerr << "Error: Can't load texture from image: " << icon_path << " -> " << IMG_GetError() << std::endl;
+        }
+        SDL_SetTextureBlendMode(texture,SDL_BLENDMODE_BLEND);
     }
+    
+    SDL_Texture *Icon::Get_texture()
+    {
+        return texture;
+    }
+    Icon::~Icon(){
+        if (!texture)
+        {
+            SDL_DestroyTexture(texture);
+        }
+        
+    }
+    /*
     Icon::Icon(const std::string &icon_path)
     {
         if (icon_path.size() >= 4 && icon_path.substr(icon_path.size() - 4) == ".txt") {
@@ -125,7 +143,7 @@ namespace vsr
             // Implementar el manejo de otros formatos si es necesario
         }
     }
-    
+    */
     //-----------------------------------------:CLASS SCREEN:--------------------------
     //Internal functions
     void Screen::Handle_buttons(SDL_Event *event){
@@ -149,7 +167,8 @@ namespace vsr
     // Create and set
 
 
-
+    bool Screen::ttf_initialized = false;
+    bool Screen::img_initialized = false;
 
 
     
@@ -158,7 +177,6 @@ namespace vsr
         tmp_surface = nullptr;
         tmp_texture = nullptr;
         button_texture = nullptr;
-        ttf_initialized = false;
         close = false;
 
         //Initializing SDL
@@ -192,6 +210,7 @@ namespace vsr
 
     }
     void Screen::Set_icon(String png_path){
+        if(!img_initialized){return;}
         tmp_surface = IMG_Load(png_path.c_str());
         if (!tmp_surface)
         {
@@ -213,6 +232,7 @@ namespace vsr
             std::cerr << "Error: Can't create texture " << texture_name << " -> " << SDL_GetError() << std::endl;
             return;
         }
+        SDL_SetTextureBlendMode(texture[texture_name],SDL_BLENDMODE_BLEND);
         SDL_SetRenderTarget(renderer,texture[texture_name]);
     }
     void Screen::Create_button_texture(const uint16_t width, const uint16_t height){
@@ -249,7 +269,22 @@ namespace vsr
         default_font = font_name;
         
     }
-    void Screen::Set_default_font(String font_name){
+    //Loads png by default
+    void Screen::Init_IMG(int flags){
+        img_initialized = true;
+        if (!IMG_Init(flags)) {
+            std::cerr << "Error: Initialize IMG -> " << IMG_GetError() << std::endl;
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            SDL_Quit();
+            return;
+        }
+    }
+    void Screen::Init_IMG(){
+        Init_IMG(IMG_INIT_PNG);
+    }
+    void Screen::Set_default_font(String font_name)
+    {
         if (!font[font_name])
         {
             std::cerr << "Font not loaded " << font_name << std::endl;
@@ -257,7 +292,10 @@ namespace vsr
         }
         default_font = font_name;
     }
-//Task handle
+    bool Screen::IMG_initialized(){
+        return img_initialized;
+    }
+    // Task handle
     void Screen::Present_renderer(){
         SDL_RenderPresent(renderer);
     }
@@ -286,17 +324,34 @@ namespace vsr
         }
         return !close;
     }
-    void Screen::Draw_texture(String texture_name){
-        if (!texture[texture_name])
+    void Screen::Draw_texture(SDL_Texture *texture, SDL_Rect* area){
+        if (!texture)
         {
+            std::cerr << "Error: texture is a nullptr" << std::endl;
+            return;
+        }
+        SDL_RenderCopy(renderer,texture,nullptr,area);
+    }
+    void Screen::Draw_saved_texture(String texture_name)
+    {
+        if (!texture[texture_name]){
             std::cerr << "Error: Texture not loaded " << texture_name << std::endl;
             return;
         }
         SDL_RenderCopy(renderer,texture[texture_name],nullptr,nullptr);
     }
-    void Screen::Clean_screen(){
-        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_NONE);
-        SDL_SetRenderDrawColor(renderer,0,0,0,255);
+    void Screen::Draw_saved_texture(String texture_name, SDL_Rect *area){
+        if (!texture[texture_name]){
+            std::cerr << "Error: Texture not loaded " << texture_name << std::endl;
+            return;
+        }
+        
+        SDL_RenderCopy(renderer,texture[texture_name],nullptr,area);
+    }
+    void Screen::Clean_screen()
+    {
+        SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer,0,0,0,0);
         SDL_RenderClear(renderer);
     }
     void Screen::Clean_screen(Color &color){
@@ -491,6 +546,11 @@ namespace vsr
             SDL_GetWindowSize(window, width, height);
     }
 
+    SDL_Renderer *Screen::Get_renderer()
+    {
+        return renderer;
+    }
+
 //Destroy
     Screen::~Screen() {
     // freeint textures
@@ -531,6 +591,11 @@ namespace vsr
     // Quit TTF
     if (ttf_initialized) {
         TTF_Quit();
+        ttf_initialized = false;
+    }
+    // Quit IMG
+    if (img_initialized) {
+        IMG_Quit();
         ttf_initialized = false;
     }
     // Quit SDL
