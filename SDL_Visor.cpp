@@ -372,7 +372,7 @@ namespace vsr
         }
         tmp_texture = SDL_CreateTextureFromSurface(renderer,tmp_surface);
         SDL_FreeSurface(tmp_surface);
-        tmp_surface == nullptr;
+        tmp_surface = nullptr;
         if (!tmp_texture){
             std::cerr << "Error: Can't create texture for: " << text << " -> " << SDL_GetError() <<  std::endl;
             return;
