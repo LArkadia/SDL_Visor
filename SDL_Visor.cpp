@@ -458,7 +458,12 @@ namespace vsr
         
     }
 
-//Draw shapes
+    void Screen::Draw_point(const uint16_t x, const uint16_t y, Color &color){
+        Set_renderer_color(color);
+        SDL_RenderDrawPoint(renderer,x,y);
+    }
+
+    // Draw shapes
     void Screen::Draw_rectangle(
         const uint16_t x, const uint16_t y, 
         const uint16_t width, const uint16_t height, 
@@ -472,7 +477,7 @@ namespace vsr
         const float_t angle, const uint16_t length, 
         Color& color){
             int x2 = x + length*cos(angle);
-            int y2 = y + length*sin(angle);
+            int y2 = y - length*sin(angle);
             Draw_line_pos(x,y,x2,y2,color);
         }
     void Screen::Draw_line_pos(

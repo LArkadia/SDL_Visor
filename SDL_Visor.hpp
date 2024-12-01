@@ -141,6 +141,7 @@ namespace vsr
         void Display_buttons();
 
         //Draw shapes
+        void Draw_point(const uint16_t x,const uint16_t y,Color& color);
         void Draw_rectangle(
             const uint16_t x,    const uint16_t y, 
             const uint16_t width,const uint16_t height, 
