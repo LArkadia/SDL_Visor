@@ -387,10 +387,16 @@ namespace vsr
             SDL_Rect rect = {x,y,width,height};
             SDL_RenderDrawRect(renderer,&rect);
         }
+    void Screen::Draw_filled_rectangle(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, Color &color){
+            Set_renderer_color(color);
+            SDL_Rect rect = {x,y,width,height};
+            SDL_RenderFillRect(renderer,&rect);
+        }
     void Screen::Draw_line_angle(
-        const uint16_t x, const uint16_t y, 
-        const float_t angle, const uint16_t length, 
-        Color& color){
+            const uint16_t x, const uint16_t y,
+            const float_t angle, const uint16_t length,
+            Color &color)
+        {
             int x2 = x + length*cos(angle);
             int y2 = y - length*sin(angle);
             Draw_line_pos(x,y,x2,y2,color);

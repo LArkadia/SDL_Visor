@@ -146,6 +146,10 @@ namespace vsr
             const uint16_t x,    const uint16_t y, 
             const uint16_t width,const uint16_t height, 
             Color& color);
+        void Draw_filled_rectangle(
+            const uint16_t x,    const uint16_t y, 
+            const uint16_t width,const uint16_t height, 
+            Color& color);
 
         void Draw_line_angle(
             const uint16_t x,    const uint16_t y, 
