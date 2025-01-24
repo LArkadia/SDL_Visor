@@ -23,7 +23,16 @@ namespace vsr
             this->blue = blue;
             this->alpha= 255;
     }
-    uint8_t Color::R(){return this->red;}
+    void Color::Reset_color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha){
+        this->red = red;
+        this->green = green;
+        this->blue = blue;
+        this->alpha = alpha;
+    }
+    void Color::Reset_color(uint8_t red, uint8_t green, uint8_t blue){
+        Reset_color(red,green,blue,255);
+    }
+    uint8_t Color::R() { return this->red; }
     uint8_t Color::G(){return this->green;}
     uint8_t Color::B(){return this->blue;}
     uint8_t Color::A(){return this->alpha;}

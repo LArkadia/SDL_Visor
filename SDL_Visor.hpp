@@ -39,6 +39,14 @@ namespace vsr
             uint8_t red,
             uint8_t green,
             uint8_t blue);
+        //Set
+        void Reset_color(uint8_t red,
+            uint8_t green,
+            uint8_t blue,
+            uint8_t alpha);
+        void Reset_color(uint8_t red,
+            uint8_t green,
+            uint8_t blue);
         //Get
         uint8_t R();
         uint8_t G();
