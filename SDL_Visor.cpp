@@ -436,6 +436,21 @@ namespace vsr
             delete[]points;
         }
 
+        void Screen::Draw_filled_circle(
+            const uint16_t x, const uint16_t y, const uint16_t r,
+            Color &color) 
+        {
+            for (int16_t dy = -r; dy <= r; ++dy) {
+                int16_t y_line = y + dy;
+                // Calcula la mitad del ancho visible para esta línea usando la ecuación del círculo
+                int16_t dx = static_cast<int16_t>(sqrt(r * r - dy * dy));
+        
+                // Punto inicial en x: centro - dx
+                // Ancho total: 2 * dx + 1 para incluir el pixel central
+                Draw_filled_rectangle(x - dx, y_line, 2 * dx + 1, 1, color);
+            }
+        }
+
         // Create buttons
         void Screen::Create_simple_button(
             const uint16_t x, const uint16_t y, 

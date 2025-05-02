@@ -173,6 +173,11 @@ namespace vsr
             const uint16_t x,   const uint16_t y,    const uint16_t r,
             const uint16_t resolution,  Color &color
         );
+
+        void Draw_filled_circle(
+            const uint16_t x,   const uint16_t y,    const uint16_t r,
+            Color &color
+        );
         
     //Create buttons
         void Create_simple_button(
