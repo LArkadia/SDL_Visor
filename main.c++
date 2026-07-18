@@ -1,5 +1,5 @@
 #include "./SDL_Visor.cpp"
-
+//Example Code
 
 void button1_fun(){
     std::cout << "Boton 1 ejecutado correctamente" << std::endl;
