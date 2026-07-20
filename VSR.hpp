@@ -1,10 +1,11 @@
+// SDL_Visor.hpp
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <vector>
 #include <string>
@@ -12,6 +13,9 @@
 #include <memory>
 #include <cinttypes>
 #include <iostream>
+#include <cmath>
+#include <cstdlib>
+#include <algorithm>
 
 #include <fstream>
 #include <sstream>
@@ -116,7 +120,7 @@ namespace vsr
 
     public:
     //Create and set
-        Screen(String title, uint16_t width,uint16_t height,uint32_t renderer_flags);
+        Screen(String title, uint16_t width,uint16_t height,SDL_PropertiesID renderer_properties);
         void Set_icon(String png_path);
         void Set_renderer_color(Color &color);
         void Set_events_handler(void (*event_handler)(SDL_Event&));
