@@ -86,18 +86,18 @@ namespace vsr
     class Button
     {
     private:
-        uint16_t x1,y1,x2,y2;
-        uint16_t width,heith;
+        int x1,y1,x2,y2;
+        int width,heith;
         void (*event_function)(void);
         SDL_Texture* texture;
     public:
-        Button(const uint16_t x, const uint16_t y,
-                const uint16_t width, const uint16_t height,
+        Button(const int x, const int y,
+                const int width, const int height,
                 SDL_Texture* button_texture,
                 void (*function_to_run)(void));
         void Display(Screen *window);
         void Run_function();
-        bool In_area(uint16_t x, uint16_t y);
+        bool In_area(int x, int y);
         ~Button();
     };
 
@@ -116,16 +116,26 @@ namespace vsr
 
         //Internal functions
         void Handle_buttons(SDL_Event* event);
+
+        //Softening
+        void Update_antialias_texture(int width,int height);
+        void Update_antialias_texture();
+
+        SDL_Texture* antialias_texture;
+
+        int antialias_scale;
+        int screen_width;
+        int screen_height;
         
 
     public:
     //Create and set
-        Screen(String title, uint16_t width,uint16_t height,SDL_PropertiesID renderer_properties);
+        Screen(String title, int width,int height,SDL_PropertiesID renderer_properties,int antialias_scale_factor = 2);
         void Set_icon(String png_path);
         void Set_renderer_color(Color &color);
         void Set_events_handler(void (*event_handler)(SDL_Event&));
-        void Create_texture(String texture_name, const uint16_t width, const uint16_t height);
-        void Create_button_texture(const uint16_t width, const uint16_t height);
+        void Create_texture(String texture_name, const int width, const int height);
+        void Create_button_texture(const int width, const int height);
         void End_texture();
         void Init_TTF (String font_name,String font_path,uint32_t font_size);
         void Load_font(String font_name,String font_path,uint32_t font_size);
@@ -144,60 +154,60 @@ namespace vsr
         void Clean_screen();
         void Clean_screen(Color &color);
         void Show_text(
-            const uint16_t x, const uint16_t y, 
+            const int x, const int y, 
             String Text, Color& color);
         void Show_text_size_fixed(
-            const uint16_t x, const uint16_t y, 
-            const uint16_t width, const uint16_t height,
+            const int x, const int y, 
+            const int width, const int height,
             String Text, Color& color);
         void Display_buttons();
 
         //Draw shapes
-        void Draw_point(const uint16_t x,const uint16_t y,Color& color);
+        void Draw_point(const int x,const int y,Color& color);
         void Draw_rectangle(
-            const uint16_t x,    const uint16_t y, 
-            const uint16_t width,const uint16_t height, 
+            const int x,    const int y, 
+            const int width,const int height, 
             Color& color);
         void Draw_filled_rectangle(
-            const uint16_t x,    const uint16_t y, 
-            const uint16_t width,const uint16_t height, 
+            const int x,    const int y, 
+            const int width,const int height, 
             Color& color);
 
         void Draw_line_angle(
-            const uint16_t x,    const uint16_t y, 
-            const float_t angle, const uint16_t length, 
+            const int x,    const int y, 
+            const float_t angle, const int length, 
             Color& color);
 
         void Draw_line_pos(
-            const uint16_t x1,   const uint16_t y1,
-            const uint16_t x2,   const uint16_t y2,
+            const int x1,   const int y1,
+            const int x2,   const int y2,
             Color &color);
         
         void Draw_circle(
-            const uint16_t x,   const uint16_t y,    const uint16_t r,
-            const uint16_t resolution,  Color &color
+            const int x,   const int y,    const int r,
+            const int resolution,  Color &color
         );
 
         void Draw_filled_circle(
-            const uint16_t x,   const uint16_t y,    const uint16_t r,
+            const int x,   const int y,    const int r,
             Color &color
         );
         
     //Create buttons
         void Create_simple_button(
-            const uint16_t x,       const uint16_t y,
-            const uint16_t width,   const uint16_t height,
+            const int x,       const int y,
+            const int width,   const int height,
             String display_text,    Color &background_color, Color &foreground_color,
             void (*event_function)(void)
         );
         /*
         void Create_button_from_texture(
             String texture_name,
-            const uint16_t x, const uint16_t y,
+            const int x, const int y,
             void (*event_function)(void)
         );
         void Create_button_from_tmp_texture(
-            const uint16_t x, const uint16_t y,
+            const int x, const int y,
             void (*event_function)(void)
         );
         */
